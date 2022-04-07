@@ -2,8 +2,6 @@
 using FSH.WebApi.Infrastructure.Common;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using MySqlConnector;
-using Npgsql;
 using System.Data.SqlClient;
 
 namespace FSH.WebApi.Infrastructure.Persistence.ConnectionString;
@@ -30,14 +28,6 @@ internal class ConnectionStringValidator : IConnectionStringValidator
         {
             switch (dbProvider?.ToLowerInvariant())
             {
-                case DbProviderKeys.Npgsql:
-                    var postgresqlcs = new NpgsqlConnectionStringBuilder(connectionString);
-                    break;
-
-                case DbProviderKeys.MySql:
-                    var mysqlcs = new MySqlConnectionStringBuilder(connectionString);
-                    break;
-
                 case DbProviderKeys.SqlServer:
                     var mssqlcs = new SqlConnectionStringBuilder(connectionString);
                     break;

@@ -2,9 +2,6 @@ using System.Data.SqlClient;
 using FSH.WebApi.Application.Common.Persistence;
 using FSH.WebApi.Infrastructure.Common;
 using Microsoft.Extensions.Options;
-using MySqlConnector;
-using Npgsql;
-using Oracle.ManagedDataAccess.Client;
 
 namespace FSH.WebApi.Infrastructure.Persistence.ConnectionString;
 
@@ -30,46 +27,9 @@ public class ConnectionStringSecurer : IConnectionStringSecurer
 
         return dbProvider?.ToLower() switch
         {
-            DbProviderKeys.Npgsql => MakeSecureNpgsqlConnectionString(connectionString),
             DbProviderKeys.SqlServer => MakeSecureSqlConnectionString(connectionString),
-            DbProviderKeys.MySql => MakeSecureMySqlConnectionString(connectionString),
-            DbProviderKeys.Oracle => MakeSecureOracleConnectionString(connectionString),
             _ => connectionString
         };
-    }
-
-    private string MakeSecureOracleConnectionString(string connectionString)
-    {
-        var builder = new OracleConnectionStringBuilder(connectionString);
-
-        if (!string.IsNullOrEmpty(builder.Password))
-        {
-            builder.Password = HiddenValueDefault;
-        }
-
-        if (!string.IsNullOrEmpty(builder.UserID))
-        {
-            builder.UserID = HiddenValueDefault;
-        }
-
-        return builder.ToString();
-    }
-
-    private string MakeSecureMySqlConnectionString(string connectionString)
-    {
-        var builder = new MySqlConnectionStringBuilder(connectionString);
-
-        if (!string.IsNullOrEmpty(builder.Password))
-        {
-            builder.Password = HiddenValueDefault;
-        }
-
-        if (!string.IsNullOrEmpty(builder.UserID))
-        {
-            builder.UserID = HiddenValueDefault;
-        }
-
-        return builder.ToString();
     }
 
     private string MakeSecureSqlConnectionString(string connectionString)
@@ -84,23 +44,6 @@ public class ConnectionStringSecurer : IConnectionStringSecurer
         if (!string.IsNullOrEmpty(builder.UserID) || !builder.IntegratedSecurity)
         {
             builder.UserID = HiddenValueDefault;
-        }
-
-        return builder.ToString();
-    }
-
-    private string MakeSecureNpgsqlConnectionString(string connectionString)
-    {
-        var builder = new NpgsqlConnectionStringBuilder(connectionString);
-
-        if (!string.IsNullOrEmpty(builder.Password) || !builder.IntegratedSecurity)
-        {
-            builder.Password = HiddenValueDefault;
-        }
-
-        if (!string.IsNullOrEmpty(builder.Username) || !builder.IntegratedSecurity)
-        {
-            builder.Username = HiddenValueDefault;
         }
 
         return builder.ToString();

@@ -8,7 +8,6 @@ using FSH.WebApi.Infrastructure.Persistence.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Serilog;
 
 namespace FSH.WebApi.Infrastructure.Persistence;
@@ -56,22 +55,9 @@ internal static class Startup
     {
         switch (dbProvider.ToLowerInvariant())
         {
-            case DbProviderKeys.Npgsql:
-                return builder.UseNpgsql(connectionString, e =>
-                     e.MigrationsAssembly("Migrators.PostgreSQL"));
-
             case DbProviderKeys.SqlServer:
                 return builder.UseSqlServer(connectionString, e =>
                      e.MigrationsAssembly("Migrators.MSSQL"));
-
-            case DbProviderKeys.MySql:
-                return builder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), e =>
-                     e.MigrationsAssembly("Migrators.MySQL")
-                      .SchemaBehavior(MySqlSchemaBehavior.Ignore));
-
-            case DbProviderKeys.Oracle:
-                return builder.UseOracle(connectionString, e =>
-                     e.MigrationsAssembly("Migrators.Oracle"));
 
             default:
                 throw new InvalidOperationException($"DB Provider {dbProvider} is not supported.");

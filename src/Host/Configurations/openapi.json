@@ -10,5 +10,11 @@
     "License": true,
     "LicenseName": "MIT License",
     "LicenseUrl": "https://github.com/fullstackhero/dotnet-webapi-boilerplate/blob/main/LICENSE"
+  },
+  "webhooks": {},
+  "openapi": "3.1.0",
+  "info": {
+    "title": ".NET 6.0 WebAPI - Clean Architecture",
+    "version": "v1"
   }
 }

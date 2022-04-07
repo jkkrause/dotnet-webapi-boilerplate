@@ -2,8 +2,6 @@ using FSH.WebApi.Infrastructure.Common;
 using Hangfire;
 using Hangfire.Console;
 using Hangfire.Console.Extensions;
-using Hangfire.MySql;
-using Hangfire.PostgreSql;
 using Hangfire.SqlServer;
 using HangfireBasicAuthenticationFilter;
 using Microsoft.AspNetCore.Builder;
@@ -44,12 +42,8 @@ internal static class Startup
     private static IGlobalConfiguration UseDatabase(this IGlobalConfiguration hangfireConfig, string dbProvider, string connectionString, IConfiguration config) =>
         dbProvider.ToLowerInvariant() switch
         {
-            DbProviderKeys.Npgsql =>
-                hangfireConfig.UsePostgreSqlStorage(connectionString, config.GetSection("HangfireSettings:Storage:Options").Get<PostgreSqlStorageOptions>()),
             DbProviderKeys.SqlServer =>
                 hangfireConfig.UseSqlServerStorage(connectionString, config.GetSection("HangfireSettings:Storage:Options").Get<SqlServerStorageOptions>()),
-            DbProviderKeys.MySql =>
-                hangfireConfig.UseStorage(new MySqlStorage(connectionString, config.GetSection("HangfireSettings:Storage:Options").Get<MySqlStorageOptions>())),
             _ => throw new Exception($"Hangfire Storage Provider {dbProvider} is not supported.")
         };
 
